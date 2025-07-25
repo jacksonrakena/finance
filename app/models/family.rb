@@ -66,7 +66,7 @@ class Family < ApplicationRecord
   end
 
   def eu?
-    country != "US" && country != "CA"
+    country != "US" && country != "CA" && country != "AU"
   end
 
   def requires_data_provider?
