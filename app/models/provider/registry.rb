@@ -67,6 +67,14 @@ class Provider::Registry
 
         Provider::Openai.new(access_token)
       end
+
+      def oanda
+        api_key = ENV.fetch("OANDA_API_KEY", Setting.oanda_api_key)
+
+        return nil unless api_key.present?
+
+        Provider::Oanda.new(api_key)
+      end
   end
 
   def initialize(concept)
@@ -92,7 +100,7 @@ class Provider::Registry
     def available_providers
       case concept
       when :exchange_rates
-        %i[synth]
+        %i[synth oanda]
       when :securities
         %i[synth]
       when :llm

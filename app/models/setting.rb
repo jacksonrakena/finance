@@ -2,6 +2,7 @@
 class Setting < RailsSettings::Base
   cache_prefix { "v1" }
 
+  field :oanda_api_key, type: :string, default: ENV["OANDA_API_KEY"]
   field :synth_api_key, type: :string, default: ENV["SYNTH_API_KEY"]
   field :openai_access_token, type: :string, default: ENV["OPENAI_ACCESS_TOKEN"]
 
