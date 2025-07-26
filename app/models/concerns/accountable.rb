@@ -57,14 +57,28 @@ module Accountable
     end
 
     def balance_money(family)
+      # family.accounts
+      #       .active
+      #       .joins(sanitize_sql_array([
+      #         "LEFT JOIN exchange_rates ON exchange_rates.date = :current_date AND accounts.currency = exchange_rates.from_currency AND exchange_rates.to_currency = :family_currency",
+      #         { current_date: Date.current.to_s, family_currency: family.currency }
+      #       ]))
+      #       .where(accountable_type: self.name)
+      #       .sum("accounts.balance * COALESCE(exchange_rates.rate, 1)")
       family.accounts
-            .active
-            .joins(sanitize_sql_array([
-              "LEFT JOIN exchange_rates ON exchange_rates.date = :current_date AND accounts.currency = exchange_rates.from_currency AND exchange_rates.to_currency = :family_currency",
-              { current_date: Date.current.to_s, family_currency: family.currency }
-            ]))
-            .where(accountable_type: self.name)
-            .sum("accounts.balance * COALESCE(exchange_rates.rate, 1)")
+        .active
+        .joins(<<-SQL.squish)
+          LEFT JOIN exchange_rates
+            ON exchange_rates.id = (
+              SELECT id FROM exchange_rates
+              WHERE from_currency = accounts.currency
+                AND to_currency = #{ActiveRecord::Base.connection.quote(family.currency)}
+              ORDER BY ABS(exchange_rates.date - #{ActiveRecord::Base.connection.quote(Date.current)})
+              LIMIT 1
+            )
+        SQL
+        .where(accountable_type: self.name)
+        .sum("accounts.balance * COALESCE(exchange_rates.rate, 1)")
     end
   end
 
