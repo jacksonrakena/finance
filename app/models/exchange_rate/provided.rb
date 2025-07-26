@@ -15,7 +15,14 @@ module ExchangeRate::Provided
 
       response = provider.fetch_exchange_rate(from: from, to: to, date: date)
 
-      return nil unless response.success? # Provider error
+      lookback_days = 5
+      unless response.success?
+        for i in 1..lookback_days
+          lookback_rate = find_or_fetch_rate(from: from, to: to, date: date - i.days)
+          return lookback_rate if lookback_rate.present?
+        end
+        return nil
+      end
 
       rate = response.data
       ExchangeRate.find_or_create_by!(
