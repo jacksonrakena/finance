@@ -15,7 +15,7 @@ module ExchangeRate::Provided
 
       response = provider.fetch_exchange_rate(from: from, to: to, date: date)
 
-      return nil unless response.success? # Provider error
+      return nil if response == nil
 
       rate = response.data
       ExchangeRate.find_or_create_by!(
