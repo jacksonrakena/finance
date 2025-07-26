@@ -15,7 +15,7 @@ Rails.application.configure do
   config.consider_all_requests_local = true
 
   # Enable server timing
-  config.server_timing = true
+  config.server_timing = false
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
@@ -65,8 +65,8 @@ Rails.application.configure do
   config.active_record.migration_error = :page_load
 
   config.assets.quiet = true
-  config.active_record.verbose_query_logs = true
-  config.active_job.verbose_enqueue_logs = true
+  # config.active_record.verbose_query_logs = true
+  # config.active_job.verbose_enqueue_logs = true
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true

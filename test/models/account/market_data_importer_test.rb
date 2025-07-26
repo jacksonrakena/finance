@@ -18,7 +18,7 @@ class Account::MarketDataImporterTest < ActiveSupport::TestCase
     @provider = mock("provider")
     Provider::Registry.any_instance
                       .stubs(:get_provider)
-                      #.with(:oanda)
+                      # .with(:oanda)
                       .returns(@provider)
   end
 
