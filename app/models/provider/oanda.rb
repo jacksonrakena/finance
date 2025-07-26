@@ -49,7 +49,6 @@ class Provider::Oanda < Provider
   # @param date [Date] the date for which to fetch the exchange rate
   def fetch_exchange_rate(from:, to:, date:)
     with_provider_response do
-
       # return nil if from or to are not known instruments
       unless instrument_sort.include?(from) && instrument_sort.include?(to)
         Rails.logger.warn("#{self.class.name} received unknown instruments: from: #{from}, to: #{to}")
@@ -98,7 +97,7 @@ class Provider::Oanda < Provider
 
     {
       date: date.to_date,
-      rate: candle["mid"]["c"],
+      rate: candle["mid"]["c"]
     }
   end
 
@@ -152,7 +151,7 @@ class Provider::Oanda < Provider
           from, to = to, from # Swap back to original order for the Rate object
         end
 
-        Rate.new(date: date.to_date, from: , to:, rate:)
+        Rate.new(date: date.to_date, from:, to:, rate:)
       end.compact
     end
   end
