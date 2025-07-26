@@ -60,10 +60,30 @@ class ExchangeRateTest < ActiveSupport::TestCase
     end
   end
 
-  test "returns nil on provider error" do
+  test "fetches lookback rate on provider error" do
+    ExchangeRate.delete_all
+
+    # Simulate provider error
     provider_response = provider_error_response(StandardError.new("Test error"))
 
     @provider.expects(:fetch_exchange_rate).returns(provider_response)
+
+    # Create a lookback rate
+    lookback_rate = ExchangeRate.create!(
+      from_currency: "USD",
+      to_currency: "EUR",
+      date: Date.yesterday,
+      rate: 1.1
+    )
+
+    # Attempt to fetch today's rate, which should return the lookback rate
+    assert_equal lookback_rate, ExchangeRate.find_or_fetch_rate(from: "USD", to: "EUR", date: Date.current, cache: true)
+  end
+
+  test "returns nil on provider error after attempting lookback" do
+    provider_response = provider_error_response(StandardError.new("Test error"))
+
+    @provider.expects(:fetch_exchange_rate).returns(provider_response).times(6)
 
     assert_nil ExchangeRate.find_or_fetch_rate(from: "USD", to: "EUR", date: Date.current, cache: true)
   end

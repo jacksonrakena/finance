@@ -7,7 +7,7 @@ module ExchangeRate::Provided
       registry.get_provider(:oanda)
     end
 
-    def find_or_fetch_rate(from:, to:, date: Date.current, cache: true)
+    def find_or_fetch_rate_no_lookback(from:, to:, date: Date.current, cache: true)
       rate = find_by(from_currency: from, to_currency: to, date: date)
       return rate if rate.present?
 
@@ -15,14 +15,7 @@ module ExchangeRate::Provided
 
       response = provider.fetch_exchange_rate(from: from, to: to, date: date)
 
-      lookback_days = 5
-      unless response.success?
-        for i in 1..lookback_days
-          lookback_rate = find_or_fetch_rate(from: from, to: to, date: date - i.days)
-          return lookback_rate if lookback_rate.present?
-        end
-        return nil
-      end
+      return nil unless response.success? # Provider error
 
       rate = response.data
       ExchangeRate.find_or_create_by!(
@@ -32,6 +25,19 @@ module ExchangeRate::Provided
         rate: rate.rate
       ) if cache
       rate
+    end
+    def find_or_fetch_rate(from:, to:, date: Date.current, cache: true)
+      rate = find_or_fetch_rate_no_lookback(from: from, to: to, date: date, cache: cache)
+      return rate if rate&.present?
+
+      return nil unless provider.present? # No provider configured (some self-hosted apps)
+
+      lookback_days = 5
+      (1..lookback_days).each { |i|
+        lookback_rate = find_or_fetch_rate_no_lookback(from: from, to: to, date: date - i.days, cache: cache)
+        return lookback_rate if lookback_rate.present?
+      }
+      nil
     end
 
     # @return [Integer] The number of exchange rates synced

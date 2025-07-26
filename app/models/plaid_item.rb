@@ -99,7 +99,7 @@ class PlaidItem < ApplicationRecord
 
   private
     def remove_plaid_item
-      plaid_provider.remove_item(access_token)
+      #plaid_provider.remove_item(access_token)
     rescue Plaid::ApiError => e
       json_response = JSON.parse(e.response_body)
 

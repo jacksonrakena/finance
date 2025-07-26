@@ -2,6 +2,7 @@ require "test_helper"
 
 class Provider::PlaidTest < ActiveSupport::TestCase
   setup do
+    skip "Plaid tests are disabled in MX2"
     # Do not change, this is whitelisted in the Plaid Dashboard for local dev
     @redirect_url = "http://localhost:3000/accounts"
 

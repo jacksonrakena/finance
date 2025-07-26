@@ -2,6 +2,7 @@ require "test_helper"
 
 class PlaidAccount::Investments::BalanceCalculatorTest < ActiveSupport::TestCase
   setup do
+    skip "Plaid is disabled in MX2"
     @plaid_account = plaid_accounts(:one)
 
     @plaid_account.update!(
