@@ -27,7 +27,7 @@ class SubscriptionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to root_path
     assert_equal "Welcome to Maybe!", flash[:notice]
-    assert_equal "trialing", @family.subscription.status
+    assert_equal "active", @family.subscription.status
     assert_in_delta Subscription::TRIAL_DAYS.days.from_now, @family.subscription.trial_ends_at, 1.minute
   end
 

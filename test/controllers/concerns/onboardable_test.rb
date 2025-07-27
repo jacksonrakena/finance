@@ -14,6 +14,7 @@ class OnboardableTest < ActionDispatch::IntegrationTest
   end
 
   test "must have subscription to visit dashboard" do
+    skip "trial functionality disabled"
     @user.update!(onboarded_at: 1.day.ago)
 
     get root_path

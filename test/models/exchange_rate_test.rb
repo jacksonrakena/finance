@@ -66,7 +66,19 @@ class ExchangeRateTest < ActiveSupport::TestCase
     # Simulate provider error
     provider_response = provider_error_response(StandardError.new("Test error"))
 
-    @provider.expects(:fetch_exchange_rate).returns(provider_response)
+    @provider.expects(:fetch_exchange_rate).with do |from:, to:, date:|
+      date == Date.yesterday || date == Date.current
+    end.returns do |from:, to:, date:|
+      if date == Date.yesterday
+        Provider::Response.new(
+          success?: true,
+          data: ExchangeRate.new(from_currency: from, to_currency: to, date: date, rate: 1.1),
+          error: nil
+        )
+      else
+        provider_response
+      end
+    end
 
     # Create a lookback rate
     lookback_rate = ExchangeRate.create!(
