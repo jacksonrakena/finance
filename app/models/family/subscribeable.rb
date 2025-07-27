@@ -44,7 +44,7 @@ module Family::Subscribeable
 
   def needs_subscription?
     false
-    #subscription.nil? && !self_hoster?
+    # subscription.nil? && !self_hoster?
   end
 
   def next_billing_date
