@@ -17,21 +17,22 @@
     <%= image_tag "logo-color.png", class: "w-16 mb-6" %>
 
     <p class="text-xl lg:text-3xl text-primary font-display font-medium">
-      Try Maybe for 14 days.
+<!--      Try Maybe for 14 days.-->
+      Let's get started.
     </p>
 
-    <h2 class="text-xl lg:text-3xl font-display text-secondary font-medium mb-2">
-      No credit card required
-    </h2>
+<!--    <h2 class="text-xl lg:text-3xl font-display text-secondary font-medium mb-2">-->
+<!--      No credit card required-->
+<!--    </h2>-->
 
     <p class="text-sm text-secondary text-center mb-8">
-      Starting the trial activates your account for Maybe.  You won't need to enter payment details.
+<!--      Starting the trial activates your account for Maybe.  You won't need to enter payment details.-->
     </p>
 
     <div class="w-full">
       <% if Current.family.can_start_trial? %>
         <%= render DS::Button.new(
-        text: "Try Maybe for 14 days",
+        text: "Start",
         href: subscription_path,
         full_width: true,
         data: { turbo: false }
@@ -52,34 +53,34 @@
     </div>
   </div>
 
-  <div class="space-y-8">
-    <h2 class="text-center text-lg lg:text-2xl font-medium text-primary">How your trial will work</h2>
+<!--  <div class="space-y-8">-->
+<!--    <h2 class="text-center text-lg lg:text-2xl font-medium text-primary">How your trial will work</h2>-->
 
-    <div class="flex gap-3">
-      <div class="rounded-xl p-1 bg-gray-400/20 theme-dark:bg-gray-500/20 flex flex-col justify-between items-center text-secondary">
-        <%= render DS::FilledIcon.new(icon: "unlock-keyhole", variant: :inverse) %>
-        <%= render DS::FilledIcon.new(icon: "bell", variant: :inverse) %>
-        <%= render DS::FilledIcon.new(icon: "credit-card", variant: :inverse) %>
-      </div>
+<!--    <div class="flex gap-3">-->
+<!--      <div class="rounded-xl p-1 bg-gray-400/20 theme-dark:bg-gray-500/20 flex flex-col justify-between items-center text-secondary">-->
+        <%#= render DS::FilledIcon.new(icon: "unlock-keyhole", variant: :inverse) %>
+        <%#= render DS::FilledIcon.new(icon: "bell", variant: :inverse) %>
+        <%#= render DS::FilledIcon.new(icon: "credit-card", variant: :inverse) %>
+<!--      </div>-->
 
-      <div class="space-y-12">
-        <div class="space-y-1.5 text-sm">
-          <p class="text-primary font-medium">Today</p>
-          <p class="text-secondary">You'll get free access to Maybe for 14 days</p>
-        </div>
+<!--      <div class="space-y-12">-->
+<!--        <div class="space-y-1.5 text-sm">-->
+<!--          <p class="text-primary font-medium">Today</p>-->
+<!--          <p class="text-secondary">You'll get free access to Maybe for 14 days</p>-->
+<!--        </div>-->
 
-        <div class="space-y-1.5 text-sm">
-          <p class="text-primary font-medium">In 13 days (<%= 13.days.from_now.strftime("%B %d") %>)</p>
-          <p class="text-secondary">We'll notify you to remind you when your trial will end.</p>
-        </div>
+<!--        <div class="space-y-1.5 text-sm">-->
+<!--          <p class="text-primary font-medium">In 13 days (<%#= 13.days.from_now.strftime("%B %d") %>)</p>-->
+<!--          <p class="text-secondary">We'll notify you to remind you when your trial will end.</p>-->
+<!--        </div>-->
 
-        <div class="space-y-1.5 text-sm">
-          <p class="text-primary font-medium">In 14 days (<%= 14.days.from_now.strftime("%B %d") %>)</p>
-          <p class="text-secondary">Your trial ends &mdash; subscribe to continue using Maybe</p>
-        </div>
-      </div>
-    </div>
-  </div>
+<!--        <div class="space-y-1.5 text-sm">-->
+<!--          <p class="text-primary font-medium">In 14 days (<%#= 14.days.from_now.strftime("%B %d") %>)</p>-->
+<!--          <p class="text-secondary">Your trial ends &mdash; subscribe to continue using Maybe</p>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
 
   <div class="space-y-8 max-w-2xl mx-auto">
     <h2 class="text-center text-lg lg:text-2xl font-medium text-primary">Here's what's included</h2>

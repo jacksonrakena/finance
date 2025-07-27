@@ -35,9 +35,9 @@
     <nav class="lg:hidden flex justify-between items-center p-3">
       <%= icon("panel-left", as_button: true, data: { action: "app-layout#openMobileSidebar"}) %>
 
-      <%= link_to root_path, class: "block" do %>
-        <%= image_tag "logomark-color.svg", class: "w-9 h-9 mx-auto" %>
-      <% end %>
+      <%#= link_to root_path, class: "block" do %>
+        <%#= image_tag "logomark-color.svg", class: "w-9 h-9 mx-auto" %>
+      <%# end %>
 
       <%= render "users/user_menu", user: Current.user, placement: "bottom-end", offset: 12 %>
     </nav>
@@ -45,11 +45,11 @@
     <%# DESKTOP - Left navbar %>
     <div class="hidden lg:block">
       <nav class="h-full flex flex-col shrink-0 w-[84px] py-4 mr-3">
-        <div class="pl-2 mb-3">
-          <%= link_to root_path, class: "block" do %>
-            <%= image_tag "logomark-color.svg", class: "w-9 h-9 mx-auto" %>
-          <% end %>
-        </div>
+<!--        <div class="pl-2 mb-3">-->
+          <%#= link_to root_path, class: "block" do %>
+            <%#= image_tag "logomark-color.svg", class: "w-9 h-9 mx-auto" %>
+          <%# end %>
+<!--        </div>-->
 
         <ul class="space-y-0.5">
           <% desktop_nav_items.reject { |item| item[:mobile_only] }.each do |nav_item| %>
@@ -60,12 +60,6 @@
         </ul>
 
         <div class="pl-2 mt-auto mx-auto flex flex-col gap-2">
-          <%= render DS::Button.new(
-            variant: "icon",
-            icon: "message-circle-question",
-            data: { action: "intercom#show" }
-          ) %>
-
           <%= render "users/user_menu", user: Current.user %>
         </div>
       </nav>
@@ -85,7 +79,7 @@
             <%= render "accounts/account_sidebar_tabs", family: Current.family, active_tab: @account_group_tab %>
           </div>
 
-          <% if Current.family.trialing? && !self_hosted? %>
+          <% if false %>
             <div class="px-4 py-3 space-y-4 bg-container shadow-border-xs rounded-xl">
               <div class="flex items-start justify-between">
                 <div>

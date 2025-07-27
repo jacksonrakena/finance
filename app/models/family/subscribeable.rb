@@ -28,7 +28,8 @@ module Family::Subscribeable
 
   def start_trial_subscription!
     create_subscription!(
-      status: "trialing",
+      status: "active",
+      stripe_id: "00000000",
       trial_ends_at: Subscription.new_trial_ends_at
     )
   end
@@ -42,7 +43,8 @@ module Family::Subscribeable
   end
 
   def needs_subscription?
-    subscription.nil? && !self_hoster?
+    false
+    #subscription.nil? && !self_hoster?
   end
 
   def next_billing_date
