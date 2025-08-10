@@ -1,6 +1,8 @@
 class Trade < ApplicationRecord
   include Entryable, Monetizable
 
+  attribute :deposit_less, :boolean, default: false
+
   monetize :price
 
   belongs_to :security

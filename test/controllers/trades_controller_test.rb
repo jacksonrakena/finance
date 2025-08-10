@@ -129,6 +129,7 @@ class TradesControllerTest < ActionDispatch::IntegrationTest
 
     assert created_entry.amount.positive?
     assert created_entry.trade.qty.positive?
+    assert_equal false, created_entry.trade.deposit_less, "deposit_less should default to false"
     assert_equal "Entry created", flash[:notice]
     assert_enqueued_with job: SyncJob
     assert_redirected_to account_url(created_entry.account)
@@ -152,6 +153,7 @@ class TradesControllerTest < ActionDispatch::IntegrationTest
 
     assert created_entry.amount.negative?
     assert created_entry.trade.qty.negative?
+    assert_equal false, created_entry.trade.deposit_less, "deposit_less should default to false"
     assert_equal "Entry created", flash[:notice]
     assert_enqueued_with job: SyncJob
     assert_redirected_to account_url(created_entry.account)

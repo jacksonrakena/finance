@@ -38,12 +38,25 @@ class Trade::CreateForm
         amount: signed_amount,
         currency: currency,
         entryable: Trade.new(
-          {
-            qty: signed_qty,
-            price: price,
-            currency: currency,
-            security: security
-          }.merge(Trade.deposit_less_supported? ? { deposit_less: ActiveModel::Type::Boolean.new.cast(deposit_less) } : {})
+          begin
+            base_attrs = {
+              qty: signed_qty,
+              price: price,
+              currency: currency,
+              security: security
+            }
+
+            if Trade.deposit_less_supported?
+              if !deposit_less.nil?
+                base_attrs[:deposit_less] = ActiveModel::Type::Boolean.new.cast(deposit_less)
+              else
+                # Ensure NOT NULL columns do not receive NULLs
+                base_attrs[:deposit_less] = false
+              end
+            end
+
+            base_attrs
+          end
         )
       )
 
