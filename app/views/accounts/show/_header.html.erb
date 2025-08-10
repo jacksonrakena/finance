@@ -22,6 +22,17 @@
           <% if subtitle.present? %>
             <p class="text-sm text-secondary"><%= subtitle %></p>
           <% end %>
+
+          <%# Balances recalculation indicator %>
+          <% if account.syncing? %>
+            <div class="mt-2 flex items-center gap-2 text-xs text-secondary">
+              <div class="relative w-5 h-5">
+                <div class="absolute inset-0 rounded-full border-2 border-gray-300"></div>
+                <div class="absolute inset-0 rounded-full border-2 border-gray-600 border-t-transparent animate-spin"></div>
+              </div>
+              <span class="text-primary">Recalculating balances…</span>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
