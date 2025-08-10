@@ -272,6 +272,9 @@ export default class extends Controller {
   }
 
   _drawTooltip() {
+    // Ensure the container is positioned so the absolute tooltip anchors correctly
+    d3.select(this.element).style("position", "relative");
+
     this._d3Tooltip = d3
       .select(`#${this.element.id}`)
       .append("div")
@@ -293,11 +296,11 @@ export default class extends Controller {
       .attr("pointer-events", "all")
       .on("mousemove", (event) => {
         const estimatedTooltipWidth = 250;
-        const pageWidth = document.body.clientWidth;
-        const tooltipX = event.pageX + 10;
-        const overflowX = tooltipX + estimatedTooltipWidth - pageWidth;
-        const adjustedX =
-          overflowX > 0 ? event.pageX - overflowX - 20 : tooltipX;
+        const [localX, localY] = d3.pointer(event, this._d3Container.node());
+        const tooltipX = localX + 10;
+        const overflowX = tooltipX + estimatedTooltipWidth - this._d3ContainerWidth;
+        const adjustedX = overflowX > 0 ? localX - overflowX - 20 : tooltipX;
+        const adjustedY = Math.max(0, localY - 10);
 
         const [xPos] = d3.pointer(event);
         const x0 = bisectDate(
@@ -357,7 +360,7 @@ export default class extends Controller {
           .style("opacity", 1)
           .style("z-index", 999)
           .style("left", `${adjustedX}px`)
-          .style("top", `${event.pageY - 10}px`);
+          .style("top", `${adjustedY}px`);
       })
       .on("mouseout", (event) => {
         const hoveringOnGuideline =

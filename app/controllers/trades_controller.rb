@@ -30,6 +30,7 @@ class TradesController < ApplicationController
 
   def update
     if @entry.update(update_entry_params)
+      @entry.lock_saved_attributes!
       @entry.sync_account_later
 
       respond_to do |format|
@@ -54,13 +55,13 @@ class TradesController < ApplicationController
     def entry_params
       params.require(:entry).permit(
         :name, :date, :amount, :currency, :excluded, :notes, :nature,
-        entryable_attributes: [ :id, :qty, :price ]
+        entryable_attributes: [ :id, :qty, :price, :deposit_less ]
       )
     end
 
     def create_params
       params.require(:model).permit(
-        :date, :amount, :currency, :qty, :price, :ticker, :manual_ticker, :type, :transfer_account_id
+        :date, :amount, :currency, :qty, :price, :ticker, :manual_ticker, :type, :transfer_account_id, :deposit_less
       )
     end
 

@@ -42,6 +42,7 @@
                   min: 0,
                   disabled: @entry.linked? %>
           <% end %>
+
         <% end %>
       </div>
     <% end %>
@@ -76,6 +77,19 @@
 
             <%= f.toggle :excluded, { data: { auto_submit_form_target: "auto" } } %>
           </div>
+
+          <%# Depositless toggle only for buy trades %>
+          <% if trade.qty.positive? && Trade.deposit_less_supported? %>
+            <%= f.fields_for :entryable do |ef| %>
+              <div class="flex cursor-pointer items-center gap-2 justify-between mt-4">
+                <div class="text-sm space-y-1">
+                  <h4 class="text-primary">Fund with assumed deposit</h4>
+                  <p class="text-secondary">Don’t reduce cash for this buy; assume an equal same-day deposit.</p>
+                </div>
+                <%= ef.toggle :deposit_less, { data: { auto_submit_form_target: "auto" } } %>
+              </div>
+            <% end %>
+          <% end %>
         <% end %>
 
         <!-- Delete Trade Form -->

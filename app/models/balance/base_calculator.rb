@@ -70,12 +70,18 @@ class Balance::BaseCalculator
       trade_cash_inflow_sum = entries.select { |e| e.amount < 0 && e.trade? }.sum(&:amount)
       trade_cash_outflow_sum = entries.select { |e| e.amount >= 0 && e.trade? }.sum(&:amount)
 
+      # Sum of depositless buy trades (amount >= 0) to neutralize cash impact
+      depositless_buy_sum = entries.select { |e| e.trade? && e.amount >= 0 && e.entryable.respond_to?(:deposit_less) && e.entryable.deposit_less }.sum(&:amount)
+
       if account.balance_type == :non_cash && account.accountable_type == "Loan"
         non_cash_inflows = txn_inflow_sum.abs
         non_cash_outflows = txn_outflow_sum
       elsif account.balance_type != :non_cash
         cash_inflows = txn_inflow_sum.abs + trade_cash_inflow_sum.abs
         cash_outflows = txn_outflow_sum + trade_cash_outflow_sum
+
+        # If a buy is marked depositless, assume a matching deposit (cash inflow)
+        cash_inflows += depositless_buy_sum
 
         # Trades are inverse (a "buy" is outflow of cash, but "inflow" of non-cash, aka "holdings")
         non_cash_outflows = trade_cash_inflow_sum.abs
@@ -112,6 +118,14 @@ class Balance::BaseCalculator
       else
         non_cash_balance
       end
+    end
+
+    def depositless_buy_sum(entries)
+      entries.select { |e| e.trade? && e.amount >= 0 && e.entryable.respond_to?(:deposit_less) && e.entryable.deposit_less }.sum(&:amount)
+    end
+
+    def adjusted_entry_flows(entries)
+      entries.sum(&:amount) - depositless_buy_sum(entries)
     end
 
     def signed_entry_flows(entries)

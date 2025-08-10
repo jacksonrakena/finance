@@ -51,6 +51,17 @@
       <% if %w[buy sell].include?(type) %>
         <%= form.number_field :qty, label: t(".qty"), placeholder: "10", min: 0.000000000000000001, step: "any", required: true %>
         <%= form.money_field :price, label: t(".price"), required: true %>
+
+        <%# Depositless toggle only for buy trades %>
+        <% if type == 'buy' %>
+          <div class="flex items-center justify-between py-2">
+            <div class="text-sm space-y-1">
+              <h4 class="text-primary">Fund with assumed deposit</h4>
+              <p class="text-secondary">Don’t reduce cash for this buy; assume an equal same-day deposit.</p>
+            </div>
+            <%= form.toggle :deposit_less, { checked: params.dig(:model, :deposit_less).present? ? ActiveModel::Type::Boolean.new.cast(params.dig(:model, :deposit_less)) : false } %>
+          </div>
+        <% end %>
       <% end %>
     </div>
 

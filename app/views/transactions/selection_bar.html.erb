@@ -6,15 +6,13 @@
   </div>
 
   <div class="flex items-center gap-1 text-secondary">
-    <%= form_with url: new_transactions_bulk_update_path, method: :get, data: { turbo_frame: :drawer } do %>
-      <%# Add the selected ids via JS on click %>
+    <%= form_with url: transactions_bulk_update_path, method: :get, data: { turbo_frame: :drawer } do %>
       <button type="button" data-bulk-select-scope-param="bulk_update" data-action="bulk-select#submitBulkRequest" class="p-1.5 group hover:bg-inverse flex items-center justify-center rounded-md" title="Bulk edit">
         <%= icon "pencil-line", class: "group-hover:text-inverse" %>
       </button>
     <% end %>
 
-    <%= form_with url: transactions_bulk_deletion_path, data: { turbo_confirm: CustomConfirm.for_resource_deletion("entry").to_data_attribute, turbo_frame: "_top" } do %>
-      <%# Add the selected ids via JS on click %>
+    <%= form_with url: transactions_bulk_deletion_path, data: { turbo_confirm: CustomConfirm.for_resource_deletion("transaction").to_data_attribute, turbo_frame: "_top" } do %>
       <button type="button" data-bulk-select-scope-param="bulk_delete" data-action="bulk-select#submitBulkRequest" class="p-1.5 group hover:bg-inverse flex items-center justify-center rounded-md" title="Delete">
         <%= icon "trash-2", class: "group-hover:text-inverse" %>
       </button>

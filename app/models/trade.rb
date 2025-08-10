@@ -13,6 +13,11 @@ class Trade < ApplicationRecord
       prefix = type == "buy" ? "Buy" : "Sell"
       "#{prefix} #{qty.to_d.abs} shares of #{ticker}"
     end
+
+    # Safely detect if the DB has the deposit_less column
+    def deposit_less_supported?
+      column_names.include?("deposit_less")
+    end
   end
 
   def unrealized_gain_loss

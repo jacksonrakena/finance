@@ -1,6 +1,6 @@
 <%# locals: (balance_sheet:, period:, **args) %>
 
-<div id="net-worth-chart">
+<div id="net-worth-chart" class="relative" data-controller="loading-overlay" data-loading-overlay-target="container">
   <% series = balance_sheet.net_worth_series(period: period) %>
   <div class="flex justify-between gap-4 px-4">
     <div class="space-y-2">
@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form" } do |form| %>
+    <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form loading-overlay" } do |form| %>
       <%= form.select :period,
                     Period.as_options,
                     { selected: period.key },

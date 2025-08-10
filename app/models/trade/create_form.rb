@@ -2,7 +2,7 @@ class Trade::CreateForm
   include ActiveModel::Model
 
   attr_accessor :account, :date, :amount, :currency, :qty,
-                :price, :ticker, :manual_ticker, :type, :transfer_account_id
+                :price, :ticker, :manual_ticker, :type, :transfer_account_id, :deposit_less
 
   # Either creates a trade, transaction, or transfer based on type
   # Returns the model, regardless of success or failure
@@ -38,10 +38,12 @@ class Trade::CreateForm
         amount: signed_amount,
         currency: currency,
         entryable: Trade.new(
-          qty: signed_qty,
-          price: price,
-          currency: currency,
-          security: security
+          {
+            qty: signed_qty,
+            price: price,
+            currency: currency,
+            security: security
+          }.merge(Trade.deposit_less_supported? ? { deposit_less: ActiveModel::Type::Boolean.new.cast(deposit_less) } : {})
         )
       )
 

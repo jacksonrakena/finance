@@ -1,5 +1,6 @@
 <%# locals: (entry:) %>
 
+<% trade = entry.trade %>
 <div id="<%= dom_id(entry, :header) %>">
   <%= tag.header class: "mb-4 space-y-1" do %>
     <span class="text-secondary text-sm">
@@ -15,6 +16,13 @@
         <span class="text-lg text-secondary">
           <%= entry.currency %>
         </span>
+
+        <% if trade.respond_to?(:deposit_less) && trade.deposit_less && trade.qty.positive? %>
+          <span class="ml-2 inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs bg-muted">
+            <%= icon("piggy-bank", size: "xs") %>
+            Assumed deposit
+          </span>
+        <% end %>
       </h3>
 
       <% if entry.linked? %>
@@ -34,6 +42,12 @@
   <div class="mb-2">
     <%= render DS::Disclosure.new(title: t(".overview"), open: true) do %>
       <div class="pb-4">
+        <% if trade.respond_to?(:deposit_less) && trade.deposit_less && trade.qty.positive? %>
+          <div class="mb-2 inline-flex items-center gap-2 rounded-full border border-secondary px-2 py-1 text-xs">
+            <%= icon("shield-check", size: "xs") %>
+            Funded with assumed deposit
+          </div>
+        <% end %>
         <dl class="space-y-3 px-3 py-2">
           <div class="flex items-center justify-between text-sm">
             <dt class="text-secondary"><%= t(".symbol_label") %></dt>

@@ -65,6 +65,13 @@
                               data: { action: "bulk-select#togglePageSelection" } %>
             <p>transaction</p>
           </div>
+          <div class="col-span-4 justify-self-end flex items-center gap-2">
+            <%= form_with url: new_transactions_bulk_update_path, method: :get, data: { turbo_frame: :drawer } do %>
+              <button type="button" data-bulk-select-scope-param="bulk_update" data-action="bulk-select#submitBulkRequest" class="px-2 py-1 rounded-md text-xs border border-secondary" title="Bulk edit">
+                Bulk edit
+              </button>
+            <% end %>
+          </div>
 
           <p class="col-span-2">category</p>
           <p class="col-span-2 justify-self-end">amount</p>

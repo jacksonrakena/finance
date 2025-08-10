@@ -1,8 +1,8 @@
-<%= render DS::Dialog.new(variant: "drawer", frame: "bulk_transaction_edit_drawer") do |dialog| %>
-  <% dialog.with_header(title: "Edit transactions", data: { bulk_select_target: "bulkEditDrawerHeader" }) %>
+<%= render DS::Dialog.new(variant: "drawer") do |dialog| %>
+  <% dialog.with_header(title: "Edit transactions", data: { controller: "bulk-select-drawer", bulk_select_target: "bulkEditDrawerHeader" }) %>
 
   <% dialog.with_body do %>
-    <%= styled_form_with url: transactions_bulk_update_path, scope: "bulk_update", class: "h-full flex flex-col justify-between gap-4", data: { turbo_frame: "_top" } do |form| %>
+    <%= styled_form_with url: transactions_bulk_update_path, scope: "bulk_update", id: "bulk-edit-form", class: "h-full flex flex-col justify-between gap-4", data: { turbo_frame: "_top" } do |form| %>
       <div class="space-y-4">
         <%= render DS::Disclosure.new(title: "Overview", open: true) do %>
           <div class="pb-6 space-y-2">
@@ -16,13 +16,37 @@
             <%= form.collection_select :merchant_id, Current.family.merchants.alphabetically, :id, :name, { prompt: "Select a merchant", label: "Merchant", class: "text-subdued" } %>
             <%= form.select :tag_ids, Current.family.tags.alphabetically.pluck(:name, :id), { include_blank: "None", multiple: true, label: "Tags", container_class: "h-40" } %>
             <%= form.text_area :notes, label: "Notes", placeholder: "Enter a note that will be applied to selected transactions", rows: 5 %>
+
+            <% if Trade.deposit_less_supported? %>
+              <div class="space-y-2 p-3 rounded-md border border-secondary">
+                <div class="text-sm space-y-1">
+                  <h4 class="text-primary">Fund with assumed deposit (trades)</h4>
+                  <p class="text-secondary">Choose a change to apply to buy trades. Leave as "Don't change" to keep current settings.</p>
+                </div>
+                <%= form.select :deposit_less_action,
+                                [["Don't change", ""], ["Enable assumed deposit", "enable"], ["Disable assumed deposit", "disable"]],
+                                { label: "Action" } %>
+              </div>
+            <% end %>
           </div>
         <% end %>
       </div>
 
+      <%# Persist selected entry ids for fallback save path or inspection %>
+      <% @entry_ids.each do |id| %>
+        <%= hidden_field_tag "bulk_update[entry_ids][]", id %>
+      <% end %>
+
+      <%= render DS::Disclosure.new(title: "Progress", open: true) do %>
+        <div class="space-y-2" data-controller="bulk-progress" data-bulk-progress-entry-ids-value='<%= @entry_ids.to_json %>' data-bulk-progress-update-url-value="<%= update_one_transactions_bulk_update_path %>">
+          <div class="text-sm text-secondary">Updates will process one by one and show any errors below.</div>
+          <ul class="space-y-1" data-bulk-progress-target="list"></ul>
+        </div>
+      <% end %>
+
       <div class="flex justify-end gap-2 mt-auto">
         <%= render DS::Button.new(text: "Cancel", variant: "ghost", data: { action: "click->dialog#close" }) %>
-        <%= render DS::Button.new(text: "Save", data: { bulk_select_scope_param: "bulk_update", action: "bulk-select#submitBulkRequest" }) %>
+        <%= render DS::Button.new(text: "Start updates", data: { action: "bulk-progress#start" }) %>
       </div>
     <% end %>
   <% end %>
